@@ -9,23 +9,35 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
-    private static final Connection conn = Util.getConnection();
+    private static Connection conn = Util.getConnection();
 
     public UserDaoJDBCImpl() {
 
     }
 
     public void createUsersTable() {
+        try (Statement statement = conn.createStatement();) {
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `user` (" +
+                    "`id` BIGINT NOT NULL AUTO_INCREMENT," +
+                    "`name` VARCHAR(45) NOT NULL," +
+                    "`lastName` VARCHAR(45) NOT NULL," +
+                    "`age` INT(3) NOT NULL," +
+                    "PRIMARY KEY (`id`));");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+        /*
         try (Statement statement = conn.createStatement()) {
             statement.executeUpdate("CREATE TABLE if NOT EXISTS USER ("
                     + "   id INT NOT NULL AUTO_INCREMENT, name VARCHAR(30) NOT NULL, lastname VARCHAR(50) NOT NULL, "
-                    + "   age INT NOT NULL, PRIMARY KEY (id) ); ");
+                    + "   age INT NOT NULL, PRIMARY KEY ('id') ); ");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
-
+*/
     public void dropUsersTable() {
         try (Statement statement = conn.createStatement()) {
             statement.executeUpdate("DROP TABLE IF EXISTS user");
@@ -42,6 +54,7 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
+            System.out.println("User " + name + " was added to table");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,7 +74,7 @@ public class UserDaoJDBCImpl implements UserDao {
         Connection conn = Util.getConnection();
         try {
             Statement statement = conn.createStatement();
-            String SQL = " Select id, name, lastName, age FROM User"; //SELECT * FROM User
+            String SQL = "SELECT * FROM User";      // Select id, name, lastName, age FROM User
            ResultSet resultSet = statement.executeQuery(SQL);
            while (resultSet.next()) {
                User user = new User();
@@ -70,12 +83,18 @@ public class UserDaoJDBCImpl implements UserDao {
                user.setLastName(resultSet.getString("lastName"));
                user.setAge(resultSet.getByte("age"));
                users.add(user);
+
            }
+            for (User us: users
+            ) { System.out.println(us);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
       return users;
+
 
     }
 
