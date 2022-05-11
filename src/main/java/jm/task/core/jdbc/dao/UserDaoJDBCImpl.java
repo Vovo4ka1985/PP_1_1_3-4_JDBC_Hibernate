@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserDaoJDBCImpl implements UserDao {
+public class UserDaoJDBCImpl{ //implements UserDao {
+
+
     private static Connection conn = Util.getConnection();
 
     public UserDaoJDBCImpl() {
@@ -28,17 +30,7 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
         }
     }
-        /*
-        try (Statement statement = conn.createStatement()) {
-            statement.executeUpdate("CREATE TABLE if NOT EXISTS USER ("
-                    + "   id INT NOT NULL AUTO_INCREMENT, name VARCHAR(30) NOT NULL, lastname VARCHAR(50) NOT NULL, "
-                    + "   age INT NOT NULL, PRIMARY KEY ('id') ); ");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
-*/
     public void dropUsersTable() {
         try (Connection conn = Util.getConnection();
                 Statement statement = conn.createStatement()) {
@@ -108,4 +100,6 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
         }
     }
+
+
 }
